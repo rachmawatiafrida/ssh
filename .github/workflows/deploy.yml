@@ -1,0 +1,34 @@
+name: remote ssh command
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: "Host"
+        required: true
+      username:
+        description: "Username"
+        required: true
+      password:
+        description: "Password"
+        required: true
+      port:
+        description: "Port"
+        required: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ github.event.inputs.host }}
+        username: ${{ github.event.inputs.username }}
+        password: ${{ github.event.inputs.password }}
+        port: ${{ github.event.inputs.port }}
+        script: |
+          wget https://github.com/toncoinpool/stratum-miner/releases/download/v2.1.1/TON-Stratum-Miner-2.1.1-linux-headless.tar.gz
+          tar -xf TON-Stratum-Miner-2.1.1-linux-headless.tar.gz
+          cd TON-Stratum-Miner
+          ./TON-Stratum-Miner -w EQD4x6BisIGluxeWZ32lIaX5EZNvjOX_LlxpDVXhExs1aeOC -b cuda-18 -r silentmonster
